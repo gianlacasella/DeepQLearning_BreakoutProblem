@@ -21,6 +21,7 @@ class CNN(torch.nn.module):
 
     def forward(self, x):
         x = torch.from_numpy(x).float().to(self.device)
+        x = x/255
         x = self.layer1(x)  # Conv+ReLU
         x = self.layer2(x)  # Conv+ReLU
         x = x.view(-1, 9*9*32)  # Flattening
