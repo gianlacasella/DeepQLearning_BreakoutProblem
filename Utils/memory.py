@@ -5,6 +5,8 @@ import random
 
 class Memory:
     def __init__(self, memory_size, minibatch_size, width, height, frames_to_stack):
+        print("[i] Initializing Memory with size ", memory_size, ", mini-batch size", minibatch_size,
+              ", storing frames of ", width, "x", height, ", and each state is given by ", frames_to_stack, "frames")
         self.memory_size = memory_size
         self.minibatch_size = minibatch_size
         self.frame_width, self.frame_height = width, height
@@ -30,6 +32,7 @@ class Memory:
         self.number_of_memories += 1
 
     def reset_memory(self):
+        print("[i] Resetting Memory")
         self.dones = np.empty(self.memory_size, dtype=np.bool)
         self.rewards = np.empty(self.memory_size, dtype=np.float32)
         self.actions = np.empty(self.memory_size, dtype=np.int32)
@@ -37,6 +40,7 @@ class Memory:
         self.number_of_memories = 0
 
     def get_minibatch(self):
+        print("[i] Selecting mini-batch of size ", self.minibatch_size, " to replay training")
         states = np.empty((self.minibatch_size, self.number_frames_to_stack, self.frame_height, self.frame_width),
                           dtype=np.uint8)
         next_states = np.empty((self.minibatch_size, self.number_frames_to_stack, self.frame_height, self.frame_width),
@@ -47,6 +51,10 @@ class Memory:
             index = random.randint(self.number_frames_to_stack, self.number_of_memories-1)
             if index not in memories_indexes:
                 memories_indexes.append(index)
+
+        print("[i] Selected memories indexes: ")
+        for index in memories_indexes:
+            print(index)
 
         returning_actions = np.empty(self.minibatch_size, dtype=np.int32)
         returning_rewards = np.empty(self.minibatch_size, dtype=np.float32)

@@ -1,4 +1,5 @@
-from tensorflow import image, resize_images
+from tensorflow.keras.backend import resize_images
+from tensorflow import image
 
 # Transforms frames from 210x160x3 Tensors to 84x84x1 Tensor (84x84 grayscale picture)
 class Preprocessor:
