@@ -19,6 +19,9 @@
     "environment": {
       "NAME": "BreakoutDeterministic-v4",
       "CLIP_REWARD": true,
-      "RENDER": false
+      "RENDER": false,
+      "FRAME_PROCESSED_HEIGHT": 84,
+      "FRAME_PROCESSED_WIDTH": 84,
+      "NUMBER_OF_FRAMES_TO_STACK_ON_STATE": 4
     }
 }

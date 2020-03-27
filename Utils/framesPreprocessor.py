@@ -2,7 +2,7 @@ from tensorflow import image, resize_images
 
 # Transforms frames from 210x160x3 Tensors to 84x84x1 Tensor (84x84 grayscale picture)
 class Preprocessor:
-    def __init__(self, target_height=84, target_width=84):
+    def __init__(self, target_height, target_width):
         self.target_height = target_height
         self.target_width = target_width
 
