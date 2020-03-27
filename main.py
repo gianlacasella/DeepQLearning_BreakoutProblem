@@ -33,6 +33,15 @@ class BreakOutPlayer:
                            self.paramsManager.get_params()["agent"]["FRAMES_TO_FINAL_EPSILON"],
                            self.paramsManager.get_params()["agent"]["EXPLORATION_PROBABILITY_DURING_EVALUATION"])
 
+    def train(self):
+        frame_number = 0
+        rewards = []
+        loss_list = []
+        while frame_number<self.paramsManager.get_params()["agent"]["MAX_FRAMES"]:
+            epoch = 0
+            while epoch<self.paramsManager.get_params()["agent"]["EVAL_FREQUENCY"]:
+                break # TODO: HERE GOES BREAKOUT_WRAPPER.RESET, BUT BREAKOUT_WRAPPER ISNT DONE YET
+
 
 
 if __name__ == '__main__':
@@ -43,3 +52,4 @@ if __name__ == '__main__':
     args = args.parse_args()
     paramsManager = ParamsManager(args.params_file)
     BreakoutPlayer = BreakOutPlayer(paramsManager)
+    BreakOutPlayer.train()
