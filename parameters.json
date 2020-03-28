@@ -5,7 +5,7 @@
         "EVAL_STEPS": 10000,
         "NETWORK_UPDATE_FREQ": 10000,
         "GAMMA" : 0.99,
-        "REPLAY_MEMORY_START_SIZE" : 50000,
+        "REPLAY_MEMORY_START_SIZE" : 1000,
         "MAX_FRAMES": 30000000,
         "MEMORY_SIZE": 1000000,
         "NO_OP_STEPS" : 10,
@@ -24,7 +24,7 @@
   },
     "environment": {
       "NAME": "BreakoutDeterministic-v4",
-      "RENDER": false,
+      "RENDER": true,
       "FRAME_PROCESSED_HEIGHT": 84,
       "FRAME_PROCESSED_WIDTH": 84,
       "NUMBER_OF_FRAMES_TO_STACK_ON_STATE": 4

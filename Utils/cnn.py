@@ -30,11 +30,12 @@ class CNN(Module):
 
     def forward(self, x):
         # Converting observation to tensor
-        x = from_numpy(x).float().to(self.device)
+        x = from_numpy(x).float().to('cpu')
         # INPUT TENSORS MUST BE PASSED AS DEPTHxHEIGHTxWIDTH
         # Input size: 4x84x84
         #print("Input to the cnn: ", x.size())
         x = x.unsqueeze(0) # Adding the batch dimension: 1x4x84x84
+        x = x.permute(0, 3, 2, 1)
         #print("Input with batch_dimension ", x.size())
         x = x/255 # Normalizing input
         x = F.relu(self.layer1(x))  # Conv+ReLU. Input: 1x4x84x84. Output: 1x16x20x20

@@ -28,7 +28,7 @@ class Memory:
         self.actions[self.number_of_memories] = action
         self.dones[self.number_of_memories] = done
         self.rewards[self.number_of_memories] = reward
-        self.frames[self.number_of_memories, ...] = processed_frame
+        self.frames[self.number_of_memories, ...] = np.squeeze(processed_frame, 2)
         self.number_of_memories += 1
 
     def reset_memory(self):

@@ -49,22 +49,25 @@ class BreakOutPlayer:
                 done_life_lost = self.breakout_wrapper.reset(evaluation=False)
                 total_episode_reward = 0
                 for i in range(self.paramsManager.get_params()["agent"]["MAX_EPISODE_LENGTH"]):
-                    chosen_action = agent.get_action(frame_number, self.breakout_wrapper.actual_state)
+                    chosen_action = self.agent.get_action(frame_number, self.breakout_wrapper.actual_state, evaluation=False)
                     processed_new_frame, reward, done, done_life_lost, new_frame = self.breakout_wrapper.step(chosen_action)
+                    if len(rewards) != 0:
+                        print("Action performed: ", chosen_action, ". Reward: ", reward, ". Mean reward: ", sum(rewards)/len(rewards), ".Frame number: ", frame_number)
                     frame_number += 1
-                    epoch_frame += 1
+                    epoch += 1
                     total_episode_reward += reward
                     if self.paramsManager.get_params()["agent"]["CLIP_REWARD"]:
-                        self.memory.store(processed_new_frame, action, self.clip_reward(reward), done_life_lost)
+                        self.memory.store(processed_new_frame, chosen_action, self.clip_reward(reward), done_life_lost)
                     else:
-                        self.memory.store(processed_new_frame, action, reward, done_life_lost)
+                        self.memory.store(processed_new_frame, chosen_action, reward, done_life_lost)
                     # If its time to learn
-                    if frame_number %self.paramsManager.get_params()["agent"]["UPDATE_FREQUENCY"] and frame_number > self.paramsManager.get_params()["agent"]["REPLAY_MEMORY_START_SIZE"]:
-                        losses = agent.learn(self.memory)
-                        loss_lis.append(losses)
-                        print("[i] Replay experience done. Mean loss: ", losses.mean())
+                    if frame_number % self.paramsManager.get_params()["agent"]["UPDATE_FREQUENCY"] and frame_number > self.paramsManager.get_params()["agent"]["REPLAY_MEMORY_START_SIZE"]:
+                        print("\n\n\n\n\n LEARNING")
+                        losses = self.agent.learn(self.memory, self.paramsManager.get_params()["agent"]["GAMMA"])
+                        loss_list.append(losses)
+                        print("[i] Replay experience done. Mean loss: ", sum(losses_list)/len(losses_list))
                     if frame_number % self.paramsManager.get_params()["agent"]["NETWORK_UPDATE_FREQ"] == 0 and frame_number > frame_number> self.paramsManager.get_params()["agent"]["REPLAY_MEMORY_START_SIZE"]:
-                        agent.updateNetworks()
+                        self.agent.updateNetworks()
                     if done:
                         done = False
                         break

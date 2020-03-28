@@ -1,8 +1,11 @@
 import gym
-from tensorflow.keras.backend import resize_images
-from tensorflow import image
 import numpy as np
 import random
+import torch
+import torch.nn.functional as F
+import torchvision
+from PIL import Image
+import tensorflow
 
 class BreakoutWrapper:
     def __init__(self, environment_name, no_op_steps, frames_to_stack_on_state, frames_width, frames_height, render):
@@ -39,8 +42,8 @@ class BreakoutWrapper:
             done_life_lost = done
         self.last_lives = info['ale.lives']
         processed_new_frame = self.processor.preprocessFrame(new_frame)
-        new_state = np.append(self.state[:, :, 1:], processed_new_frame, axis=2)
-        self.state = new_state
+        new_state = np.append(self.actual_state[:, :, 1:], processed_new_frame, axis=2)
+        self.actual_state = new_state
 
         return processed_new_frame, reward, done, done_life_lost, new_frame
 
@@ -55,11 +58,11 @@ class Preprocessor:
         self.target_width = target_width
 
     def preprocessFrame(self, frame):
+
         # To grayscale
-        self.returning_tensor = image.rgb_to_grayscale(frame)
+        self.returning_tensor = tensorflow.image.rgb_to_grayscale(frame)
         # Cropping
-        self.returning_tensor = image.crop_to_bounding_box(self.returning_tensor, 34, 0, 160, 160)
-        # Resizing to target_heightxtarget_width with nearest neighbor method
-        self.returning_tensor = resize_images(self.returning_tensor, [self.target_height, self.target_width],
-                                            image.ResizeMethod.NEAREST_NEIGHBOR)
+        self.returning_tensor = tensorflow.image.crop_to_bounding_box(self.returning_tensor, 34, 0, 160, 160)
+        # Resizing
+        self.returning_tensor = tensorflow.image.resize(self.returning_tensor, (self.target_height, self.target_width))
         return self.returning_tensor

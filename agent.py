@@ -82,7 +82,7 @@ class Agent:
                 gamma * np.argmax(self.target_cnn(new_state).data.to(torch.device('cpu')).numpy()) * \
                 (1 - dones[i])
             Q = self.main_cnn(states[i]).data.to(torch.device('cpu')).numpy()[actions[i]]
-            loss = torch.nn.functional.smooth_l1_loss(Q, y)
+            loss = torch.nn.functional.mse_loss(Q, y)
             self.main_cnn_optimizer.zero_grad()
             loss.backward()
             self.main_cnn_optimizer.step()
