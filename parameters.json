@@ -19,11 +19,11 @@
         "FINAL_EPSILON_VALUE": 0.01,
         "FRAMES_TO_FINAL_EPSILON": 1500000,
         "EXPLORATION_PROBABILITY_DURING_EVALUATION": 0.0,
-        "USE_CUDA": true
-    },
+        "USE_CUDA": true,
+        "CLIP_REWARD": true
+  },
     "environment": {
       "NAME": "BreakoutDeterministic-v4",
-      "CLIP_REWARD": true,
       "RENDER": false,
       "FRAME_PROCESSED_HEIGHT": 84,
       "FRAME_PROCESSED_WIDTH": 84,

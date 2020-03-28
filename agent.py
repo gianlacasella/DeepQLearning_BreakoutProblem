@@ -1,10 +1,11 @@
 import numpy as np
 import torch
+import copy
 
 class Agent:
     def __init__(self, main_cnn, target_cnn, starting_epsilon, number_of_frames_to_constant_starting_epsilon,
                  first_epsilon_decay, number_of_frames_to_first_epsilon_decay, final_epsilon,
-                 frames_to_final_epsilon, exploration_prob_during_eval):
+                 frames_to_final_epsilon, exploration_prob_during_eval, learning_rate):
         """
         :param main_cnn: Main convolutional neural network
         :param starting_epsilon: Starting epsilon value, usually 1
@@ -25,12 +26,16 @@ class Agent:
         self.final_epsilon = final_epsilon
         self.frames_to_final_epsilon = frames_to_final_epsilon
         self.exploration_during_evaluation = exploration_prob_during_eval
+        self.learning_rate = learning_rate
 
         self.first_slope = (self.first_epsilon_decay - self.starting_epsilon) / self.frames_to_first_decay
         self.first_intercept = -self.first_slope*self.number_frames_with_constant_epsilon + self.starting_epsilon
         self.second_slope = (self.final_epsilon - self.first_epsilon_decay) / self.frames_to_final_epsilon
         self.second_intercept = -self.second_slope*(self.number_frames_with_constant_epsilon + self.frames_to_first_decay) + self.first_epsilon_decay
+
         self.print_data()
+
+        self.main_cnn_optimizer = torch.optim.Adam(self.main_cnn.parameters(), lr=self.learning_rate)
 
     def print_data(self):
         print("[i] Agent creation parameters: ")
@@ -61,5 +66,30 @@ class Agent:
             epsilon = frame_number*self.second_slope+self.second_intercept
             print("[i] Frame number inside the second decay period, epsilon is ", epsilon)
         if np.random.rand(1) < epsilon:
-            return np.random.randint(0, 4)
-        return np.argmax(self.main_cnn(state).data.to(torch.device('cpu')).numpy())
+            chosen = np.random.randint(0, 4)
+            print("[i] Random action chosen: ", chosen)
+            return chosen
+        best_action = np.argmax(self.main_cnn(state).data.to(torch.device('cpu')).numpy())
+        print("[i] Best action chosen: ", best_action)
+        return best_action
+
+    def learn(self, memory, gamma):
+        states, actions, rewards, new_states, dones = memory.get_minibatch()
+        i = 0
+        losses = []
+        for new_state in new_states:
+            y = rewards[i] + \
+                gamma * np.argmax(self.target_cnn(new_state).data.to(torch.device('cpu')).numpy()) * \
+                (1 - dones[i])
+            Q = self.main_cnn(states[i]).data.to(torch.device('cpu')).numpy()[actions[i]]
+            loss = torch.nn.functional.smooth_l1_loss(Q, y)
+            self.main_cnn_optimizer.zero_grad()
+            loss.backward()
+            self.main_cnn_optimizer.step()
+            i += 1
+            losses.append(loss)
+        return losses
+
+    def updateNetworks(self):
+        self.target_cnn = copy.deepcopy(self.main_cnn)
+

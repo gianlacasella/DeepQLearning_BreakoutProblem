@@ -2,6 +2,7 @@ from utils.params import ParamsManager
 from utils.cnn import CNN
 from utils.framesPreprocessor import Preprocessor
 from utils.memory import Memory
+from utils.breakout import BreakoutWrapper
 import numpy as np
 import torch
 import gym
@@ -9,8 +10,6 @@ from argparse import ArgumentParser
 import copy
 from agent import Agent
 
-
-# to update target_cnn target_cnn.load_state_dict(main_cnn.state_dict())
 
 class BreakOutPlayer:
     def __init__(self, paramsManager):
@@ -31,16 +30,57 @@ class BreakOutPlayer:
                            self.paramsManager.get_params()["agent"]["FRAMES_TO_FIRST_EPSILON_DECAY"],
                            self.paramsManager.get_params()["agent"]["FINAL_EPSILON_VALUE"],
                            self.paramsManager.get_params()["agent"]["FRAMES_TO_FINAL_EPSILON"],
-                           self.paramsManager.get_params()["agent"]["EXPLORATION_PROBABILITY_DURING_EVALUATION"])
+                           self.paramsManager.get_params()["agent"]["EXPLORATION_PROBABILITY_DURING_EVALUATION"],
+                           self.paramsManager.get_params()["agent"]["LEARNING_RATE"])
+        self.breakout_wrapper = BreakoutWrapper(self.paramsManager.get_params()["environment"]["NAME"],
+                                                self.paramsManager.get_params()["agent"]["NO_OP_STEPS"],
+                                                self.paramsManager.get_params()["environment"]["NUMBER_OF_FRAMES_TO_STACK_ON_STATE"],
+                                                self.paramsManager.get_params()["environment"]["FRAME_PROCESSED_WIDTH"],
+                                                self.paramsManager.get_params()["environment"]["FRAME_PROCESSED_HEIGHT"],
+                                                self.paramsManager.get_params()["environment"]["RENDER"])
 
     def train(self):
         frame_number = 0
         rewards = []
         loss_list = []
-        while frame_number<self.paramsManager.get_params()["agent"]["MAX_FRAMES"]:
+        while frame_number < self.paramsManager.get_params()["agent"]["MAX_FRAMES"]:
             epoch = 0
-            while epoch<self.paramsManager.get_params()["agent"]["EVAL_FREQUENCY"]:
-                break # TODO: HERE GOES BREAKOUT_WRAPPER.RESET, BUT BREAKOUT_WRAPPER ISNT DONE YET
+            while epoch < self.paramsManager.get_params()["agent"]["EVAL_FREQUENCY"]:
+                done_life_lost = self.breakout_wrapper.reset(evaluation=False)
+                total_episode_reward = 0
+                for i in range(self.paramsManager.get_params()["agent"]["MAX_EPISODE_LENGTH"]):
+                    chosen_action = agent.get_action(frame_number, self.breakout_wrapper.actual_state)
+                    processed_new_frame, reward, done, done_life_lost, new_frame = self.breakout_wrapper.step(chosen_action)
+                    frame_number += 1
+                    epoch_frame += 1
+                    total_episode_reward += reward
+                    if self.paramsManager.get_params()["agent"]["CLIP_REWARD"]:
+                        self.memory.store(processed_new_frame, action, self.clip_reward(reward), done_life_lost)
+                    else:
+                        self.memory.store(processed_new_frame, action, reward, done_life_lost)
+                    # If its time to learn
+                    if frame_number %self.paramsManager.get_params()["agent"]["UPDATE_FREQUENCY"] and frame_number > self.paramsManager.get_params()["agent"]["REPLAY_MEMORY_START_SIZE"]:
+                        losses = agent.learn(self.memory)
+                        loss_lis.append(losses)
+                        print("[i] Replay experience done. Mean loss: ", losses.mean())
+                    if frame_number % self.paramsManager.get_params()["agent"]["NETWORK_UPDATE_FREQ"] == 0 and frame_number > frame_number> self.paramsManager.get_params()["agent"]["REPLAY_MEMORY_START_SIZE"]:
+                        agent.updateNetworks()
+                    if done:
+                        done = False
+                        break
+                rewards.append(total_episode_reward)
+
+
+
+
+    def clip_reward(self, r):
+        if r>0:
+            return 1
+        elif r==0:
+            return 0
+        else:
+            return -1
+
 
 
 
@@ -52,4 +92,4 @@ if __name__ == '__main__':
     args = args.parse_args()
     paramsManager = ParamsManager(args.params_file)
     BreakoutPlayer = BreakOutPlayer(paramsManager)
-    BreakOutPlayer.train()
+    BreakoutPlayer.train()
