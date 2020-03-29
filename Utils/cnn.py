@@ -4,9 +4,8 @@ from torch.nn import functional as F
 
 
 class CNN(Module):
-    def __init__(self, device_to_use):
+    def __init__(self):
         super(CNN, self).__init__()
-        self.device = device_to_use
 
         print("[i] Creating cnn layers")
         # Input: 4x84x84 tensor
@@ -30,7 +29,7 @@ class CNN(Module):
 
     def forward(self, x):
         # Converting observation to tensor
-        x = from_numpy(x).float().to('cpu')
+        x = from_numpy(x).float().to('cuda')
         # INPUT TENSORS MUST BE PASSED AS DEPTHxHEIGHTxWIDTH
         # Input size: 4x84x84
         #print("Input to the cnn: ", x.size())

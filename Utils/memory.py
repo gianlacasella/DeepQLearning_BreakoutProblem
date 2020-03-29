@@ -52,10 +52,6 @@ class Memory:
             if index not in memories_indexes:
                 memories_indexes.append(index)
 
-        print("[i] Selected memories indexes: ")
-        for index in memories_indexes:
-            print(index)
-
         returning_actions = np.empty(self.minibatch_size, dtype=np.int32)
         returning_rewards = np.empty(self.minibatch_size, dtype=np.float32)
         returning_dones = np.empty(self.minibatch_size, dtype=np.bool)

@@ -75,13 +75,13 @@ class Agent:
 
     def learn(self, memory, gamma):
         states, actions, rewards, new_states, dones = memory.get_minibatch()
-        i = 0
         losses = []
-        for new_state in new_states:
+        for i in range(32):
+            new_state = new_states[i]
             y = rewards[i] + \
-                gamma * np.argmax(self.target_cnn(new_state).data.to(torch.device('cpu')).numpy()) * \
+                gamma * torch.max(self.target_cnn(new_state)) * \
                 (1 - dones[i])
-            Q = self.main_cnn(states[i]).data.to(torch.device('cpu')).numpy()[actions[i]]
+            Q = self.main_cnn(states[i])[actions[i]]
             loss = torch.nn.functional.mse_loss(Q, y)
             self.main_cnn_optimizer.zero_grad()
             loss.backward()

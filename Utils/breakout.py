@@ -1,10 +1,6 @@
 import gym
 import numpy as np
 import random
-import torch
-import torch.nn.functional as F
-import torchvision
-from PIL import Image
 import tensorflow
 
 class BreakoutWrapper:

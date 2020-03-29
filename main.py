@@ -20,10 +20,12 @@ class BreakOutPlayer:
                              self.paramsManager.get_params()["environment"]["FRAME_PROCESSED_HEIGHT"],
                              self.paramsManager.get_params()["environment"]["NUMBER_OF_FRAMES_TO_STACK_ON_STATE"])
         print("[i] Creating main convolutional neural network")
-        self.main_cnn = CNN("cuda" if self.paramsManager.get_params()["agent"]["USE_CUDA"]==True else "cpu")
+        self.main_cnn = CNN()
         print("[i] Creating target convolutional neural network")
         self.target_cnn = copy.deepcopy(self.main_cnn)
         print("[!] Creating the agent")
+        self.main_cnn.cuda()
+        self.target_cnn.cuda()
         self.agent = Agent(self.main_cnn, self.target_cnn, self.paramsManager.get_params()["agent"]["EPSILON_MAX"],
                            self.paramsManager.get_params()["agent"]["NUMBER_OF_FRAMES_TO_CONSTANT_EPSILON"],
                            self.paramsManager.get_params()["agent"]["FIRST_EPSILON_DECAY"],
@@ -64,9 +66,8 @@ class BreakOutPlayer:
                     if frame_number % self.paramsManager.get_params()["agent"]["UPDATE_FREQUENCY"] and frame_number > self.paramsManager.get_params()["agent"]["REPLAY_MEMORY_START_SIZE"]:
                         print("\n\n\n\n\n LEARNING")
                         losses = self.agent.learn(self.memory, self.paramsManager.get_params()["agent"]["GAMMA"])
-                        loss_list.append(losses)
-                        print("[i] Replay experience done. Mean loss: ", sum(losses_list)/len(losses_list))
-                    if frame_number % self.paramsManager.get_params()["agent"]["NETWORK_UPDATE_FREQ"] == 0 and frame_number > frame_number> self.paramsManager.get_params()["agent"]["REPLAY_MEMORY_START_SIZE"]:
+                        print("Loss: ", losses)
+                    if frame_number % self.paramsManager.get_params()["agent"]["NETWORK_UPDATE_FREQ"] == 0 and frame_number> self.paramsManager.get_params()["agent"]["REPLAY_MEMORY_START_SIZE"]:
                         self.agent.updateNetworks()
                     if done:
                         done = False
