@@ -28,20 +28,27 @@ class BreakoutWrapper:
         self.actual_state = np.repeat(processed_frame, self.frames_to_stack_on_state, axis=2)
         return done
 
-    def step(self, action):
+
+    def step(self, action, dying_reward, current_ale_lives):
+        # Performing the action
         new_frame, reward, done, info = self.env.step(action)
+        # Penalty for loosing a life
+        if info['ale.lives'] < current_ale_lives:
+            reward += dying_reward
+
+        # Changing states, etc
         if self.render:
             self.env.render()
         if info['ale.lives'] < self.last_lives:
             done_life_lost = True
         else:
             done_life_lost = done
+
         self.last_lives = info['ale.lives']
         processed_new_frame = self.processor.preprocessFrame(new_frame)
         new_state = np.append(self.actual_state[:, :, 1:], processed_new_frame, axis=2)
         self.actual_state = new_state
-
-        return processed_new_frame, reward, done, done_life_lost, new_frame
+        return processed_new_frame, reward, done, done_life_lost, new_frame, info
 
 
 
@@ -54,11 +61,9 @@ class Preprocessor:
         self.target_width = target_width
 
     def preprocessFrame(self, frame):
-
         # To grayscale
         self.returning_tensor = tensorflow.image.rgb_to_grayscale(frame)
         # Cropping
         self.returning_tensor = tensorflow.image.crop_to_bounding_box(self.returning_tensor, 34, 0, 160, 160)
         # Resizing
-        self.returning_tensor = tensorflow.image.resize(self.returning_tensor, (self.target_height, self.target_width))
-        return self.returning_tensor
+        return tensorflow.image.resize(self.returning_tensor, (self.target_height, self.target_width))

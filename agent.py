@@ -66,17 +66,34 @@ class Agent:
             epsilon = frame_number*self.second_slope+self.second_intercept
             print("[i] Frame number inside the second decay period, epsilon is ", epsilon)
         if np.random.rand(1) < epsilon:
-            chosen = np.random.randint(0, 4)
-            print("[i] Random action chosen: ", chosen)
+            chosen = np.random.randint(0, 3)
+            # USED ACTIONS: [NOOP, LEFT, RIGHT]
+            # OPENAI GYM ACTIONSPACE: ['NOOP', 'FIRE', 'RIGHT', 'LEFT']
+            if chosen == 1:
+                # Returns left
+                print("[i] Random action chosen: LEFT")
+                return 3
+            elif chosen == 2:
+                # Returns right
+                print("[i] Random action chosen: RIGHT")
+                return 2
+            # Returns noop
+            print("[i] Random action chosen: NOOP")
             return chosen
         best_action = np.argmax(self.main_cnn(state).data.to(torch.device('cpu')).numpy())
-        print("[i] Best action chosen: ", best_action)
+        if best_action == 1:
+            print("[i] Best action chosen: LEFT")
+            return 3
+        elif best_action == 2:
+            print("[i] Random action chosen: RIGHT")
+            return 2
+        print("[i] Random action chosen: NOOP")
         return best_action
 
-    def learn(self, memory, gamma):
+    def learn(self, memory, gamma, mini_batch_size):
         states, actions, rewards, new_states, dones = memory.get_minibatch()
         losses = []
-        for i in range(32):
+        for i in range(mini_batch_size):
             new_state = new_states[i]
             y = rewards[i] + \
                 gamma * torch.max(self.target_cnn(new_state)) * \

@@ -4,29 +4,35 @@
         "EVAL_FREQUENCY": 200000,
         "EVAL_STEPS": 10000,
         "NETWORK_UPDATE_FREQ": 10000,
-        "GAMMA" : 0.99,
-        "REPLAY_MEMORY_START_SIZE" : 50000,
+        "GAMMA" : 0.98,
+        "REPLAY_MEMORY_START_FRAME" : 50000,
         "MAX_FRAMES": 30000000,
-        "MEMORY_SIZE": 10000,
+        "GOOD_MEMORIES_SIZE": 5000,
+        "BAD_MEMORIES_SIZE": 5000,
         "NO_OP_STEPS" : 10,
         "UPDATE_FREQUENCY": 4,
         "LEARNING_RATE": 0.00001,
+        "DYING_REWARD": -0.1,
         "MINI_BATCH_SIZE": 32,
         "EPSILON_MAX": 1.0,
-        "NUMBER_OF_FRAMES_TO_CONSTANT_EPSILON": 50000,
+        "NUMBER_OF_FRAMES_WITH_CONSTANT_EPSILON": 50000,
         "FIRST_EPSILON_DECAY": 0.1,
         "FRAMES_TO_FIRST_EPSILON_DECAY": 1000000,
         "FINAL_EPSILON_VALUE": 0.01,
         "FRAMES_TO_FINAL_EPSILON": 1500000,
         "EXPLORATION_PROBABILITY_DURING_EVALUATION": 0.0,
         "USE_CUDA": true,
-        "CLIP_REWARD": true
+        "CLIP_REWARD": false,
+        "TRAINING": true,
+        "LOAD_MODEL": false
   },
     "environment": {
       "NAME": "BreakoutDeterministic-v4",
       "RENDER": true,
+      "RENDER_ON_EVAL": true,
       "FRAME_PROCESSED_HEIGHT": 84,
       "FRAME_PROCESSED_WIDTH": 84,
-      "NUMBER_OF_FRAMES_TO_STACK_ON_STATE": 4
+      "NUMBER_OF_FRAMES_TO_STACK_ON_STATE": 4,
+      "SEPARATOR": "========================================================================================"
     }
 }
