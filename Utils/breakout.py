@@ -4,7 +4,7 @@ import random
 import tensorflow
 
 class BreakoutWrapper:
-    def __init__(self, environment_name, no_op_steps, frames_to_stack_on_state, frames_width, frames_height, render):
+    def __init__(self, environment_name, no_op_steps, frames_to_stack_on_state, frames_width, frames_height, render, render_on_evaluation):
         print("[i] Creating the Breakout Wrapper on environment ", environment_name, ", ", frames_to_stack_on_state,
               " frames to stack on each state of size ", frames_height, "x", frames_width)
         self.env = gym.make(environment_name)
@@ -14,6 +14,7 @@ class BreakoutWrapper:
         self.no_op_steps = no_op_steps
         self.frames_to_stack_on_state = frames_to_stack_on_state
         self.render = render
+        self.render_on_eval = render_on_evaluation
 
 
     def reset(self, evaluation):
@@ -29,16 +30,19 @@ class BreakoutWrapper:
         return done
 
 
-    def step(self, action, dying_reward, current_ale_lives):
+    def step(self, action, dying_reward, current_ale_lives, eval=False):
         # Performing the action
         new_frame, reward, done, info = self.env.step(action)
         # Penalty for loosing a life
         if info['ale.lives'] < current_ale_lives:
             reward += dying_reward
-
         # Changing states, etc
-        if self.render:
-            self.env.render()
+        if eval == False:
+            if self.render:
+                self.env.render()
+        else:
+            if self.render_on_eval:
+                self.env.render()
         if info['ale.lives'] < self.last_lives:
             done_life_lost = True
         else:

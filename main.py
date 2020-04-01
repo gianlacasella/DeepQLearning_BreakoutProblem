@@ -9,6 +9,8 @@ from argparse import ArgumentParser
 import copy
 from agent import Agent
 import time
+import imageio
+from skimage.transform import resize
 
 
 class BreakOutPlayer:
@@ -40,7 +42,15 @@ class BreakOutPlayer:
                                                 self.paramsManager.get_params()["environment"]["NUMBER_OF_FRAMES_TO_STACK_ON_STATE"],
                                                 self.paramsManager.get_params()["environment"]["FRAME_PROCESSED_WIDTH"],
                                                 self.paramsManager.get_params()["environment"]["FRAME_PROCESSED_HEIGHT"],
-                                                self.paramsManager.get_params()["environment"]["RENDER"])
+                                                self.paramsManager.get_params()["environment"]["RENDER"],
+                                                self.paramsManager.get_params()["environment"]["RENDER_ON_EVAL"])
+
+    def get_gif(self, frame_number, frames, reward, path):
+        for idx, frame in enumerate(frames):
+            frames[idx] = resize(frame, (420,320,3),preserve_range=True, order=0).astype(np.uint8)
+        imageio.mimsave(f'{path}{"ATARI_frame_{0}_reward_{1}.gif".format(frame_number, reward)}', frames, duration=1/30)
+
+
 
     def train(self):
         # Frame counter, and training rewards
@@ -74,7 +84,7 @@ class BreakOutPlayer:
                     else:
                         chosen_action = self.agent.get_action(frame_number, self.breakout_wrapper.actual_state,evaluation=False)
                     # We take the step. A dying penalty is added by the breakout_wrapper
-                    processed_new_frame, reward, done, done_life_lost, _ , info = self.breakout_wrapper.step(chosen_action,self.paramsManager.get_params()["agent"]["DYING_REWARD"], current_ale_lives)
+                    processed_new_frame, reward, done, done_life_lost, _ , info = self.breakout_wrapper.step(chosen_action,self.paramsManager.get_params()["agent"]["DYING_REWARD"], current_ale_lives, eval = False)
                     print("[i] Action performed: ", chosen_action, ". Reward: ", reward, ".Frame number: ", frame_number)
                     # If we already have rewards:
                     if len(rewards) != 0:
@@ -106,7 +116,7 @@ class BreakOutPlayer:
                 epoch_rewards.append(total_episode_reward)
 
             #########################
-            ####### EVALUATION #######
+            ####### EVALUATION ######
             #########################
             # We are now on evaluation
             epochs_means.append(sum(epoch_rewards)/len(epoch_rewards))
@@ -114,6 +124,50 @@ class BreakOutPlayer:
             for idx, mean in enumerate(epochs_means):
                 print("Epoch number: %d. Mean reward: %.3f" % (idx, mean))
             time.sleep(10)
+            print("============ STARTING EVALUATION ============ ")
+            time.sleep(5)
+            gif =  self.paramsManager.get_params()["environment"]["GIF_ON_EVAL"]
+
+            frames_for_gif = []
+            evaluation_rewards = []
+
+            evaluation_frame_number = 0
+            current_ale_lives = 5
+            perform_fire = True
+            episode_reward_sum = 0
+            self.breakout_wrapper.reset(evaluation=True)
+            for step in range(self.paramsManager.get_params()["agent"]["EVAL_STEPS"]):
+                if perform_fire:
+                    chosen_action = 1
+                else:
+                    chosen_action = self.agent.get_action(evaluation_frame_number, self.breakout_wrapper.actual_state,evaluation=True)
+                # We take the step. A dying penalty is added by the breakout_wrapper
+                processed_new_frame, reward, done, done_life_lost, new_frame, info = self.breakout_wrapper.step(chosen_action,self.paramsManager.get_params()["agent"]["DYING_REWARD"],current_ale_lives, eval=True)
+                print("[i] Action performed: ", chosen_action, ". Reward: ", reward, ".Frame number: ", evaluation_frame_number)
+                evaluation_frame_number += 1
+                episode_reward_sum += reward
+
+                if gif:
+                    frames_for_gif.append(new_frame)
+
+                if info["ale.lives"] < current_ale_lives:
+                    perform_fire = True
+                    current_ale_lives = info["ale.lives"]
+                elif info["ale.lives"] == current_ale_lives:
+                    perform_fire = False
+
+                if done:
+                    evaluation_rewards.append(episode_reward_sum)
+                    episode_reward_sum = 0
+                    done = False
+                    perform_fire = True
+                    gif = False
+            print("Evaluation score:\n", np.mean(evaluation_rewards))
+            try:
+                self.get_gif(evaluation_frame_number, frames_for_gif, evaluation_rewards[0], self.paramsManager.get_params()["agent"]["OUTPUT_DIR"])
+            except IndexError:
+                print("No evaluation game finished!")
+
 
 
 

@@ -87,7 +87,6 @@ class Memory:
 
         # Selecting valid indexes for good and bad memories. 1/4 of the memory_batch_size will be filled up with
         # good memories, and the other 3/4 with bad memories
-        i = 0
         for i in range(self.minibatch_size):
             if i < int(self.minibatch_size/4):
                 index = random.randint(self.number_frames_to_stack, self.number_of_good_memories-1)
