@@ -16,8 +16,7 @@ from skimage.transform import resize
 class BreakOutPlayer:
     def __init__(self, paramsManager):
         self.paramsManager = paramsManager
-        self.memory = Memory(self.paramsManager.get_params()["agent"]["GOOD_MEMORIES_SIZE"],
-                             self.paramsManager.get_params()["agent"]["BAD_MEMORIES_SIZE"],
+        self.memory = Memory(self.paramsManager.get_params()["agent"]["MEMORY_SIZE"],
                              self.paramsManager.get_params()["agent"]["MINI_BATCH_SIZE"],
                              self.paramsManager.get_params()["environment"]["FRAME_PROCESSED_WIDTH"],
                              self.paramsManager.get_params()["environment"]["FRAME_PROCESSED_HEIGHT"],
