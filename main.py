@@ -106,15 +106,17 @@ class BreakOutPlayer:
                 epoch_rewards.append(total_episode_reward)
 
             #########################
-            ####### EVALUATION #######
+            ####### SAVE INFO #######
             #########################
-            # We are now on evaluation
             epochs_means.append(sum(epoch_rewards)/len(epoch_rewards))
+            file = open("results.txt", "w")
             print("============ EPOCH %d FINISHED ============"% len(epochs_means))
             for idx, mean in enumerate(epochs_means):
                 print("Epoch number: %d. Mean reward: %.3f" % (idx, mean))
+                file.write("Epoch number: %d. Mean reward: %.3f\n" % (idx, mean))
+            file.close()
             time.sleep(10)
-
+            
 
 
     def clip_reward(self, r):

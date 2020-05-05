@@ -1,7 +1,7 @@
 {
   "agent" : {
         "MAX_EPISODE_LENGTH": 18000,
-        "EVAL_FREQUENCY": 200000,
+        "EVAL_FREQUENCY": 300000,
         "EVAL_STEPS": 10000,
         "NETWORK_UPDATE_FREQ": 10000,
         "GAMMA" : 0.98,
@@ -12,7 +12,7 @@
         "NO_OP_STEPS" : 10,
         "UPDATE_FREQUENCY": 4,
         "LEARNING_RATE": 0.00001,
-        "DYING_REWARD": -0.1,
+        "DYING_REWARD": -0.01,
         "MINI_BATCH_SIZE": 32,
         "EPSILON_MAX": 1.0,
         "NUMBER_OF_FRAMES_WITH_CONSTANT_EPSILON": 50000,
