@@ -1,9 +1,9 @@
-# DeepQLearningBreakout
+# Deep Q Learning on Breakout
 
 
-## Using DeepQLearning on the OpenAI's BreakoutDeterministic-v4 environment
+## Using Deep Q Learning on the OpenAI's BreakoutDeterministic-v4 environment
 
-On this project, I trained an AI Agent with **DeepQLearning (Double Deep Q-Learning with Dueling Network Architecture)** on the OpenAI's [BreakoutDeterministic-v4](https://gym.openai.com/envs/Breakout-v0/) environment.
+On this project, I trained an AI Agent with **Deep Q Learning** on the OpenAI's [BreakoutDeterministic-v4](https://gym.openai.com/envs/Breakout-v0/) environment.
 <br><br>In Breakout, a layer of bricks lines the top third of the screen and the goal is **to destroy them all**. A ball moves straight around the screen, bouncing off the top and two sides of the screen. When a brick is hit, the ball bounces back and the brick is destroyed. The player loses a turn when the ball touches the bottom of the screen; to prevent this from happening, the player has a **horizontally movable paddle to bounce the ball upward, keeping it in play**. 
 
 <p align="center">
@@ -27,7 +27,7 @@ The algorithm used in this project is taken from [Mnih et al. 2015](https://www.
   <img src="img/algorithm.png">
 </p>
 
-Then, takes a "random minibatch" from the memory to replay, calculates the target network predicted q-value, and perform gradient descent step on the networks prediction difference with respect to the action-value function parameters. It is important to notice that the target neural network is predicting the q-value of the best action on the "next sequence". On the image below can be seen how the temporal difference changes from Normal Deep Q Network to a Double Deep Q Network.
+Then, takes a "random minibatch" from the memory to replay, calculates the target network predicted q-value, and perform gradient descent step on the networks prediction difference with respect to the action-value function parameters. It is important to notice that the target neural network is predicting the q-value of the best action on the "next sequence". On the image below can be seen how the temporal difference changes from a Normal Deep Q Network to a Double Deep Q Network.
 
 <p align="center">
   <img src="img/qlearning_vs_doubleqlearning.PNG">
