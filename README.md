@@ -72,10 +72,18 @@ Clone this repository, and open the Terminal/Command Prompt inside the folder. Y
 python main.py
 ```
 
+It will save on a .txt the mean reward of each epoch.
 
 
 ## What I learned
 
+* To use Neural Networks with Pytorch
+* To use Convolutional Neural Networks with Pytorch
+* Some tensorial algebra
+* Classical approach to Deep Q Learning (Normal Deep Q Network)
+* A more advanced approach to Deep Q Learning (Double Deep Q Network)
+* Preprocess images to make them less computationally demanding for a CNN
+* How to store 'memories' to make them replayable by the agent
 
 ## Authors
 
