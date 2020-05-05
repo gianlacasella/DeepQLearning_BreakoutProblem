@@ -1,6 +1,5 @@
 import json
 
-
 class ParamsManager(object):
     def __init__(self, params_file):
         try:

@@ -45,7 +45,7 @@ The CNN arquitecture is also taken from [Mnih et al. 2013](https://arxiv.org/pdf
 
 ## Modifications I made to the algorithm
 
-* Modified the action space: the original environment action space is given by ['NOOP', 'FIRE', 'RIGHT', 'LEFT'], but I removed the 'FIRE' option. On each episode, the wrapper makes the 'FIRE' action. Then, the action space is reduced at: ['NOOP', 'LEFT', 'RIGHT']
+* Modified the action space: the original environment action space is given by ['NOOP', 'FIRE', 'RIGHT', 'LEFT'], but I removed the 'FIRE' option. On each episode, the wrapper makes the 'FIRE' action. Then, the action space is reduced to: ['NOOP', 'LEFT', 'RIGHT']
 
 * Added through the environment wrapper a negative reward when the agent loses a life
 
@@ -54,11 +54,24 @@ The CNN arquitecture is also taken from [Mnih et al. 2013](https://arxiv.org/pdf
 
 ## My results
 
-Unfortunately, my pc doesn't have the computational capability to train this agent for days, and get to the 300.000 iterations suggested by the params.json. I tried training it for a day, and got some encouraging results.
+Unfortunately, my PC doesn't have the computational capability to train this agent for days, and get to the 300.000 iterations suggested on the parameters.json file. I tried training it for a day, and got some encouraging results.
 
 ## Prerequisites
 
+* Python 3.5
+* Numpy
+* Pytorch
+* OpenAI Gym
+
 ## Getting started
+
+Clone this repository, and open the Terminal/Command Prompt inside the folder. You can costumize the learning parameters on parameters.json. Then, execute the main.py script:
+
+
+```
+python main.py
+```
+
 
 
 ## What I learned
