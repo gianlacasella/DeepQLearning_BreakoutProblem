@@ -10,6 +10,11 @@ On this project, I trained an AI Agent with **DeepQLearning (Double Deep Q-Learn
   <img src="img/breakout.gif">
 </p>
 
+The algorithm used in this project is taken from [Mnih et al. 2015](https://www.nature.com/articles/nature14236/):
+
+<p align="center">
+  <img src="img/algorithm.png">
+</p>
 
 ## My results
 
