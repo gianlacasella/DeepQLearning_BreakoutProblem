@@ -102,7 +102,6 @@ class BreakOutPlayer:
                         break
                 rewards.append(total_episode_reward)
                 epoch_rewards.append(total_episode_reward)
-
             #########################
             ####### SAVE INFO #######
             #########################

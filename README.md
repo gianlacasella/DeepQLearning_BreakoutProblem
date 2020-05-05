@@ -45,6 +45,13 @@ The CNN arquitecture is also taken from [Mnih et al. 2013](https://arxiv.org/pdf
 
 ## Modifications I made to the algorithm
 
+* Modified the action space: the original environment action space is given by ['NOOP', 'FIRE', 'RIGHT', 'LEFT'], but I removed the 'FIRE' option. On each episode, the wrapper makes the 'FIRE' action. Then, the action space is reduced at: ['NOOP', 'LEFT', 'RIGHT']
+
+* Added through the environment wrapper a negative reward when the agent loses a life
+
+* Modified the way memories are stored: only stores 'good' (transitions that leads to a positive reward) and 'bad' memories  (transitions that leads to a negative reward)
+
+
 ## My results
 
 ## Prerequisites
