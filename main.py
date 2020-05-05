@@ -10,7 +10,6 @@ import copy
 from agent import Agent
 import time
 
-
 class BreakOutPlayer:
     def __init__(self, paramsManager):
         self.paramsManager = paramsManager
@@ -43,7 +42,6 @@ class BreakOutPlayer:
                                                 self.paramsManager.get_params()["environment"]["RENDER"])
 
     def train(self):
-        # Frame counter, and training rewards
         frame_number = 0
         rewards = []
         # Stores the mean rewards of each epoch
