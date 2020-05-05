@@ -21,7 +21,7 @@ This preprocessing process can be found on the environment wrapper [breakout.py]
 
 ## Algorithm used
 
-The algorithm used in this project is taken from [Mnih et al. 2015](https://www.nature.com/articles/nature14236/). It initializes replay memory with some capacity and creates two Neural Networks: action-value function and a target action-value function, both with random weights. Then, it preprocesses a sequence of frames, and using an epsilon-greedy-descendant algorithm selects a random action or the best action selected by the action-value function. Executes the action on the environment, gets its reward and next image and then preprocesses the next frames sequence. Once done, stores the transition on the memory (a transition is given by a sequence, action performed, reward, and next sequence). 
+The algorithm used in this project is taken from [Mnih et al. 2013](https://arxiv.org/pdf/1312.5602.pdf). It initializes replay memory with some capacity and creates two Neural Networks: action-value function and a target action-value function, both with random weights. Then, it preprocesses a sequence of frames, and using an epsilon-greedy-descendant algorithm selects a random action or the best action selected by the action-value function. Executes the action on the environment, gets its reward and next image and then preprocesses the next frames sequence. Once done, stores the transition on the memory (a transition is given by a sequence, action performed, reward, and next sequence). 
 
 <p align="center">
   <img src="img/algorithm.png">
