@@ -33,8 +33,15 @@ Then, takes a "random minibatch" from the memory to replay, calculates the targe
   <img src="img/qlearning_vs_doubleqlearning.PNG">
 </p>
 
-
 At last, every C steps resets the target neural network.
+
+It is important to emphasize that a "sequence" is given by a stack of 4 84x84x1 frames (already preprocessed).
+
+## Convolutional Neural Network description
+
+The CNN arquitecture is also taken from [Mnih et al. 2013](https://arxiv.org/pdf/1312.5602.pdf):
+
+>The first hidden layer convolves16 8×8 filters with stride 4 with the input image and applies a rectifier nonlinearity [10, 18].  The second hidden layer convolves 32 4×4 filters with stride 2, again followed by a rectifier nonlinearity. The final hidden layer is fully-connected and consists of 256 rectifier units.  The output layer is a fully-connected linear layer with a single output for each valid action
 
 ## Modifications I made to the algorithm
 
