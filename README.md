@@ -12,13 +12,14 @@ On this project, I trained an AI Agent with **DeepQLearning (Double Deep Q-Learn
 
 The algorithm used in this project is taken from [Mnih et al. 2015](https://www.nature.com/articles/nature14236/). Initially, it initializes replay memory with some capacity and creates two Neural Networks: action-value function with random weights and a target action-value function with the same weights. Then, it preprocesses a sequence of frames, and using an epsilon-greedy-descendant algorithm selects a random action or the best action selected by the action-value function. Executes the action on the environment, gets its reward and next image and then preprocesses the next frames sequence. Once done, stores the transition on the memory (a transition is given by a sequence, action performed, reward, and next sequence). 
 
+<p align="left">
+  <img src="img/algorithm.png">
+</p>
+
 Then, takes a "random minibatch" from the memory to replay, calculates the target network predicted q-value, and perform gradient descent step on the networks prediction difference with respect to the action-value function parameters. It is important to notice that the target neural network is predicting the q-value of the best action on the "next sequence".
 
 At last, every C steps resets the target neural network.
 
-<p align="center">
-  <img src="img/algorithm.png">
-</p>
 
 ## My results
 
