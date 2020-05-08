@@ -54,7 +54,7 @@ The CNN arquitecture is also taken from [Mnih et al. 2013](https://arxiv.org/pdf
 
 ## My results
 
-Unfortunately, my PC doesn't have the computational capability to train this agent for days, and get to the 300.000 iterations suggested on the parameters.json file. I tried training it for a day, and got some encouraging results.
+Unfortunately, my PC doesn't have the computational capability to train this agent for days, and get to the 300.000 iterations suggested on the parameters.json file. I tried training it for two days, and got some encouraging results.
 
 ## Prerequisites
 
